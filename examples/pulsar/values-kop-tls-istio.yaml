@@ -17,15 +17,39 @@
 # under the License.
 #
 
-apiVersion: v1
-appVersion: "2.8.0"
-description: Apache Pulsar Helm chart for Kubernetes
-name: pulsar
-version: 2.8.0
-home: https://streamnative.io
-sources:
-- https://github.com/streamnative/charts/pulsar
-icon: http://pulsar.apache.org/img/pulsar.svg
-maintainers:
-- name: StreamNative Support
-  email: support@streamnative.io
+components:
+  kop: true
+
+broker:
+  annotations:
+    sidecar.istio.io/inject: "true"
+
+# enable TLS
+tls:
+  enabled: true
+  proxy:
+    enabled: true
+  broker:
+    enabled: true
+  zookeeper:
+    enabled: true
+
+# issue selfsigning certs
+certs:
+  internal_issuer:
+    enabled: true
+    type: selfsigning
+  public_issuer:
+    enabled: true
+    type: selfsigning
+
+istio:
+  enabled: true
+  gateway:
+    selector:
+      istio: "ingressgateway"
+
+ingress:
+  kop: 
+    enabled: true
+    external_domain: <external_domain>
